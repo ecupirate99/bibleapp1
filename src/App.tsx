@@ -164,12 +164,20 @@ function App() {
         )}
       </main>
 
-      <footer className={`text-center py-6 text-lg ${
+      <footer className={`text-center py-6 space-y-2 ${
         darkMode 
           ? 'bg-gray-800 text-gray-400' 
           : 'bg-gray-100 text-gray-600'
       }`}>
-        Made by Quintin <a href="mailto:biblepodcast4teens@gmail.com?subject=Bible%20Explanation%20App" className={`ml-2 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}>Feedback</a>
+        <div>Made by Quintin</div>
+        <div>
+          <a 
+            href="mailto:biblepodcast4teens@gmail.com?subject=Bible%20Explanation%20App" 
+            className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}
+          >
+            Feedback
+          </a>
+        </div>
       </footer>
     </div>
   );
