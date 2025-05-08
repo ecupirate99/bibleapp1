@@ -173,3 +173,8 @@ function App() {
     </a>
   </div>
 </footer>
+    </div>
+  );
+}
+
+export default App;
