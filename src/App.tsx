@@ -158,13 +158,18 @@ function App() {
         )}
       </main>
 
-      <footer className={`text-center py-4 sm:py-6 text-sm sm:text-base ${
-        darkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'
-      }`}>
-        Made by Quintin
-      </footer>
-    </div>
-  );
-}
-
-export default App;
+<footer className={`text-center py-4 sm:py-6 text-sm sm:text-base ${
+  darkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'
+}`}>
+  <div>Made by Quintin - Powered by AI</div>
+  <div>
+    <a
+      href="mailto:biblepodcast4teens@gmail.com?subject=Bible%20Explanations%20App"
+      className={`underline hover:text-blue-500 transition-colors ${
+        darkMode ? 'text-gray-300' : 'text-gray-700'
+      }`}
+    >
+      Feedback
+    </a>
+  </div>
+</footer>
