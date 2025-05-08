@@ -1,40 +1,69 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Ensure API key is available
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 if (!apiKey) {
   throw new Error('VITE_GEMINI_API_KEY is not set in environment variables');
 }
 
+// Initialize Gemini 1.5 Flash model
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+const model = genAI.getGenerativeModel({
+  model: 'models/gemini-1.5-flash-latest',
+  generationConfig: {
+    temperature: 0.7,
+    topK: 40,
+    topP: 0.95,
+    maxOutputTokens: 2048, // Increased to ensure complete responses
+  },
+});
 
 export async function getVerseInterpretation(verseReference: string) {
-  const prompt = `Provide an interpretation of the Bible verse or verses: ${verseReference}
-  
-  ... [your prompt text here, unchanged] ...
-  `;
+  const prompt = `Analyze the Bible verse or verses: ${verseReference}
+
+Important: Keep your response concise and ensure it fits within a complete, valid JSON object.
+
+Return ONLY a JSON object with NO additional formatting, markdown, or code blocks. The response should be a raw JSON object with this exact structure:
+{
+  "verse": "The complete Bible verse text (including all verses if it's a range)",
+  "interpretation": "A brief, clear explanation in 2-3 sentences about what this verse means, written at an 8th-grade reading level.",
+  "applications": ["2-3 short, practical applications of these teachings"]
+}
+
+Guidelines:
+- Keep all text fields brief and focused
+- Use simple, everyday language
+- Ensure the JSON is complete and properly formatted
+- Do not include line breaks within text fields
+- Keep the total response under 1000 characters`;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent([prompt]);
     const response = result.response;
     const text = response.text();
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    const cleanJson = jsonMatch ? jsonMatch[0] : text.replace(/```json|```/g, '').trim();
+    // Clean up any potential markdown formatting
+    const cleanJson = text.replace(/^\`\`\`json\n|\`\`\`$/g, '').trim();
 
     try {
-      return JSON.parse(cleanJson);
+      // Validate JSON structure before returning
+      const parsed = JSON.parse(cleanJson);
+      
+      // Ensure all required fields exist
+      if (!parsed.verse || !parsed.interpretation || !Array.isArray(parsed.applications)) {
+        throw new Error('Invalid response structure');
+      }
+
+      return parsed;
     } catch (parseError) {
       console.error('Failed to parse Gemini response:', cleanJson);
-      throw new Error('Oops! The AI had trouble formatting its response as valid JSON. Please try again.');
+      throw new Error('Failed to process the verse interpretation. Please try again.');
     }
   } catch (error: any) {
     console.error('Error calling Gemini API:', error?.message || error);
     if (error?.message?.includes('API key')) {
-      throw new Error('It seems there is an issue with the API key. Please check your configuration.');
-    } else if (error?.message?.includes('model')) {
-      throw new Error('The specified AI model is not available. Please check if you have access to Gemini 1.5 Pro.');
+      throw new Error('Invalid API key configuration');
     }
-    throw new Error('Oh no! Something went wrong. Please check your verse reference and try again.');
+    throw new Error('Failed to get verse interpretation. Please try again.');
   }
 }
