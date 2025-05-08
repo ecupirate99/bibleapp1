@@ -6,7 +6,7 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: 'models/gemini-1.5-pro' });
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
 export async function getVerseInterpretation(verseReference: string) {
   const prompt = `Provide an interpretation of the Bible verse or verses: ${verseReference}
