@@ -170,14 +170,6 @@ function App() {
           : 'bg-gray-100 text-gray-600'
       }`}>
         <div>Made by Quintin</div>
-        <div>
-          <a 
-            href="mailto:biblepodcast4teens@gmail.com?subject=Bible%20Explanation%20App" 
-            className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}
-          >
-            Feedback
-          </a>
-        </div>
       </footer>
     </div>
   );
