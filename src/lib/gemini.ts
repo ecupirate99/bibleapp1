@@ -8,7 +8,7 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // ✅ Choose "gemini-2.5-flash" for more power, or "gemini-2.5-flash-lite" for more free quota
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
 export async function getVerseInterpretation(verseReference: string) {
   const prompt = `Analyze the Bible verse or verses: ${verseReference}
